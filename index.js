@@ -4,7 +4,8 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv").config();
 
 const app = express();
-app.use(cors());
+// app.use(cors());
+
 
 app.use(express.json({ limit: "10mb" }));
 
@@ -126,13 +127,8 @@ app.post("/uploadProduct", async (req, res) => {
 });
 
 app.get("/product", async (req, res) => {
-  try {
-    const response = productModel.find({});
-    const data = await response.json();
-    res.json(data);
-  } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+  const data = await productModel.find({});
+  res.send(JSON.stringify(data));
 });
 
 // server listen
