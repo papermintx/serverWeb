@@ -6,16 +6,6 @@ const dotenv = require("dotenv").config();
 const app = express();
 app.use(cors());
 
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://20.120.9.174"); // Ganti dengan domain yang diperbolehkan
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
-
 app.use(express.json({ limit: "10mb" }));
 
 const PORT = process.env.PORT || 8080;
@@ -136,8 +126,13 @@ app.post("/uploadProduct", async (req, res) => {
 });
 
 app.get("/product", async (req, res) => {
-  const data = await productModel.find({});
-  res.send(JSON.stringify(data));
+  try {
+    const response = productModel.find({});
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 // server listen
